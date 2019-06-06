@@ -25,7 +25,7 @@ def remove_strudel (sentence):
     after2 = pattern2.sub('', sentence)
     return  pattern2.sub('', sentence)
 
-def
+
 
 def word_extraction(sentence):
     with open("english") as stop_words:

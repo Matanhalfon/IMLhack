@@ -7,7 +7,8 @@ import re
 import emoji
 import regex
 
-path="/cs/usr/matanhalfon/Desktop/MLhachton/data"
+path1="/cs/usr/matanhalfon/Desktop/MLhachton/data"
+trainpath="cs/usr/matanhalfon/PycharmProjects/IMLhack"
 
 def readData(path):
     """
@@ -38,27 +39,50 @@ def readData(path):
 
 
 
-
 def extract_emojis(text):
     decode   = text.decode('utf-8')
     allchars = [str for str in decode]
     return [c for c in allchars if c in emoji.UNICODE_EMOJI]
 
+def getMeanWord(text):
+    words=text.split()
+    avg=sum(len(word) for word in words)/len(words)
+    return avg
+
+def isRT(text):
+    if "RT @" in text:
+        return 1
+    else:
+        return 0
 
 
 
-def runMe():
-    data=readData(path)
+
+
+def runMe(path):
+    # data=readData(path)
+    data=pd.read_csv("train.csv")
     tweets=data["tweet"]
     data["word count"]=tweets.str.split().apply(len)
     data["wordl len"]=wordlens=tweets.str.len()
     data["numCap"]=tweets.str.findall(r'[A-Z]').str.len()
     data["numHashtags"]=tweets.str.findall(r'#').str.len()
     data["numOfTaging "]=tweets.str.findall(r'@').str.len()
-    emojilists=tweets.apply(extract_emojis)
+    data["emojilists"]=tweets.apply(extract_emojis)
+    data["mean word"]=tweets.apply(getMeanWord)
+    data["num of !"]=tweets.str.findall(r'!').str.len()
+    data["num of ?"]=tweets.str.findall(r'\?').str.len()
+    data["num of dots"]=tweets.str.findall(r'\.').str.len()
+    data["num of commas"]=tweets.str.findall(r'\,').str.len()
+    data["is RT"]=tweets.apply(isRT)
     labels=data["user"]
     data.drop(["user"],axis=1,inplace=True)
+    # RT,notRT=RTsplit(data)
+    RT = data.loc[data["is RT"] == True]
+    not_RT = data.drop(RT.index,axis = 0)
+    RT.to_csv(r'testRT.csv',index=False)
+    not_RT.to_csv(r'testNotRT.csv',index=False)
     return data
 
 
-runMe()
+runMe(trainpath)
