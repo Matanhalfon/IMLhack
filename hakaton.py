@@ -95,6 +95,16 @@ def main():
     label_bag = clean_words(label_bag)
     label_bag = clean_words_n(label_bag)
 
+    for person in label_bag:
+        f_del = []
+        for word in label_bag[person]:
+            for pers in label_bag:
+                if pers != person and word in label_bag[pers]:
+                    f_del.append(word)
+        for w in f_del:
+            del label_bag[person][w]
+
+
     for per in label_bag:
 
         d = label_bag[per]
