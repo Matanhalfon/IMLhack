@@ -61,20 +61,6 @@ def generate_bow1(word):
 
 
 
-data = pd.read_csv("rawNotRT.csv")
-data.tweet = data.tweet.apply(pre_pro)
-vocab = tokenize(data.tweet)
-print (len(vocab))
-file_object = open("words_file", 'w')
-file_object.write("Word List for Document \n{0} \n".format(vocab))
-file_object.close()
-for word in vocab:
-    bag_vector = generate_bow1(word)
-    data[word] = bag_vector
-
-print (data)
-# X = data.tweet.apply(generate_bow)
-Y = data["user"]
 
 
 

@@ -61,12 +61,12 @@ def calculate_error(predictions, y):
 def create_neural_network(X,y):
     model = Sequential()
     model.add(Dense(8, input_dim = X.shape[1] , activation = 'relu'))
-    model.add(Dense(10, activation = 'selu'))
+    model.add(Dense(10, activation = 'elu'))
     model.add(Dense(10, activation = 'relu'))
-    model.add(GaussianNoise(0.12))
-    # model.add(Dense(32, input_dim=32,
-    #                 kernel_regularizer=regularizers.l2(0.01),
-    #                 activity_regularizer=regularizers.l1(0.01)))
+    # model.add(GaussianNoise(0.12))
+    model.add(Dense(10, input_dim=32,
+                    kernel_regularizer=regularizers.l2(0.01),
+                    activity_regularizer=regularizers.l1(0.01)))
     model.add(Dense(10, activation = 'relu'))
     model.add(Dense(10, activation = 'softmax'))
     model.compile(loss = 'categorical_crossentropy' , optimizer = 'adam' , metrics = ['accuracy'] )
