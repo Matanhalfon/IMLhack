@@ -50,12 +50,12 @@ RTcommenWords=['whitehouse', 'dbongino', 'president', 'joebiden', 'vp', 'kkwbeau
 numricfichers=["word count","wordl len","numCap","numCap","numHashtags","numOfTaging ","mean word",
                "num of !" ,   "num of ?","num of dots","num of commas"]
 
-emojilist=["u'\u2728'", "u'\U0001f352'", "u'\U0001f49c'", "u'\u2640'", "u'\U0001f499'", "u'\U0001f351'"
- "u'\U0001f5e3'","u'\U0001f440'", "u'\u203c'", "u'\u2642'", "u'\U0001f926'", "u'\U0001f937'",
-"u'\U0001f680'", "u'\u270a'", "u'\U0001f4af'", "u'\U0001f923'", "u'\U0001f601'", "u'\U0001f451'"
-"u'\U0001f62d'", "u'\U0001f389'", "u'\U0001f3b6'", "u'\U0001f60a'", "u'\U0001f31f'",
-"u'\U0001f3a4'", "u'\U0001f496'", "u'\U0001f607'""u'\U0001f44d'", "u'\U0001f44c'",
-"u'\U0001f51d'", "u'\U0001f609'", "u'\u26bd'"]
+emojilist=["\u2728", "\U0001f352", "\U0001f49c", "\u2640", "\U0001f499", "\U0001f351",
+ "\U0001f5e3","\U0001f440", "\u203c", "\u2642", "\U0001f926", "\U0001f937",
+"\U0001f680", "\u270a", "\U0001f4af", "\U0001f923", "\U0001f601", "\U0001f451"
+"\U0001f62d", "\U0001f389", "\U0001f3b6", "\U0001f60a", "\U0001f31f",
+"\U0001f3a4", "\U0001f496", "\U0001f607", "\U0001f44d", "\U0001f44c",
+"\U0001f51d", "\U0001f609", "\u26bd"]
 
 
 
@@ -87,8 +87,9 @@ def readData(path):
 
 
 def extract_emojis(text):
-    decode   = text.decode('utf-8')
-    allchars = [str for str in decode]
+    # decode   = text.decode('utf-8')
+    # allchars = [str for str in decode]
+    allchars = [str for str in text]
     return [c for c in allchars if c in emoji.UNICODE_EMOJI]
 
 def getMeanWord(text):
@@ -146,7 +147,7 @@ def addcommenwords(tweets,data,flag):
         for comword in RTcommenWords:
             newcol=tweets.apply(iscontains,word=comword)
             data[comword]=newcol
-    # data=addemojis(data)
+    data=addemojis(data)
     return data
 
 
@@ -171,7 +172,7 @@ def  addnmricfichers(tweets,data):
     data["numCap"]=tweets.str.findall(r'[A-Z]').str.len()
     data["numHashtags"]=tweets.str.findall(r'#').str.len()
     data["numOfTaging "]=tweets.str.findall(r'@').str.len()
-    # data["emojilists"]=tweets.apply(extract_emojis)
+    data["emojilists"]=tweets.apply(extract_emojis)
     data["mean word"]=tweets.apply(getMeanWord)
     data["num of !"]=tweets.str.findall(r'!').str.len()
     data["num of ?"]=tweets.str.findall(r'\?').str.len()
