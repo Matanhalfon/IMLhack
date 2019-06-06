@@ -9,7 +9,7 @@ TRAIN = 'trainNotRT.csv'
 USER = 'user'
 EMOJIS = 'emojilists'
 SEP = ', '
-FILE_NAME = 'user_emojis.csv'
+FILE_NAME = 'user_emojis.tsv'
 
 
 def get_emojis():
@@ -87,7 +87,7 @@ def write_counts(counts):
 		f.write(SEP.join([USER, EMOJIS]))
 		f.write('\n')
 		for user, emojis in counts.items():
-			f.write(SEP.join([str(user), str(list(emojis.keys()))]))	
+			f.write('\t'.join([str(user), str(list(emojis.keys()))]))	
 			f.write('\n')
 
 def print_counts(coutns):
