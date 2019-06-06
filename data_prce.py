@@ -15,6 +15,15 @@ pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a
 pattern2 = re.compile('@[A-Za-z0-9_-]+ ')
 pattern3 = re.compile('#[A-Za-z0-9_-]+ ')
 
+notRTcommenWords=["wall","crime","border","democrats","china","biden","vp","conan","saw","gameofgames","ellentube"
+,"thankssponsor","nwatch","kkwbeauty","kkwfragrance","shop","lip","kingjames","striveforgreatness"
+,"homie","bro","monsters","joanne","tony","gaga","cr7","cristiano","portugal","nikefootball",
+"hello","hala","kimmel","realdonaldtrump","iamguillermo","arnoldsports","great","thank",
+"fantastic"]
+
+
+RTS="RT @"
+
 def readData(path):
     """
     read connect and shuffle the tweets and then write them to
@@ -42,8 +51,6 @@ def readData(path):
 
 
 
-
-
 def extract_emojis(text):
     decode   = text.decode('utf-8')
     allchars = [str for str in decode]
@@ -54,8 +61,8 @@ def getMeanWord(text):
     avg=sum(len(word) for word in words)/len(words)
     return avg
 
-def isRT(text):
-    if "RT @" in text:
+def iscontains(text,word=RTS):
+    if word in text:
         return 1
     else:
         return 0
@@ -106,15 +113,17 @@ def runMe(path):
     data["num of ?"]=tweets.str.findall(r'\?').str.len()
     data["num of dots"]=tweets.str.findall(r'\.').str.len()
     data["num of commas"]=tweets.str.findall(r'\,').str.len()
-    data["is RT"]=tweets.apply(isRT)
+    data["is RT"]=tweets.apply(iscontains)
     labels=data["user"]
-
     # data.drop(["user"],axis=1,inplace=True)
     # RT,notRT=RTsplit(data)
+    for comword in notRTcommenWords:
+        newcol=tweets.apply(iscontains,word=comword)
+        data[comword]=newcol
     RT ,notRT=RTsplit(data)
     # RT.to_csv(r'trainRT.csv',index=False)
     # notRT.to_csv(r'trainNotRT.csv',index=False)
-    return data
+    return RT ,notRT
 
 
 runMe(trainpath)

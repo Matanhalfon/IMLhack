@@ -70,7 +70,19 @@ def clean_words_n(label_bag):
     for person in label_bag:
         f_del = []
         for word in label_bag[person]:
-            if int(label_bag[person][word])< 40:
+            if int(label_bag[person][word])< 2:  # appear in others
+                f_del.append(word)
+        for w in f_del:
+            del label_bag[person][w]
+    return label_bag
+
+
+def clean_words_s(label_bag):
+
+    for person in label_bag:
+        f_del = []
+        for word in label_bag[person]:
+            if int(label_bag[person][word])< 30:  # appear in me
                 f_del.append(word)
         for w in f_del:
             del label_bag[person][w]
@@ -104,6 +116,7 @@ def main():
         for w in f_del:
             del label_bag[person][w]
 
+    label_bag = clean_words_s(label_bag)
 
     for per in label_bag:
 
