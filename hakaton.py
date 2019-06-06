@@ -2,21 +2,63 @@ import  pandas as pd
 import numpy as np
 from collections import Counter
 from sklearn.feature_extraction.text import CountVectorizer
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+import collections, re
+import json
+
+def pre_pro (allsentences):
+    for sentence in allsentences:
+        
+
+def word_extraction(sentence):
+    with open("english") as stop_words:
+        ignore = list(stop_words)
+
+    words = re.sub("[^\w]", " ", sentence).split()
+    cleaned_text = [w.lower() for w in words if w not in ignore]
+    return cleaned_text
+
+
+def tokenize(sentences):
+    words = []
+    for sentence in sentences:
+        w = word_extraction(sentence)
+        words.extend(w)
+
+    words = sorted(list(set(words)))
+    return words
+
+def generate_bow(allsentences):
+    vocab = tokenize(allsentences)
+    file_object = open("words_file", 'w')
+    file_object.write("Word List for Document \n{0} \n".format(vocab))
+    for sentence in allsentences:
+        words = word_extraction(sentence)
+        bag_vector = np.zeros(len(vocab))
+        for w in words:
+            for i, word in enumerate(vocab):
+                if word == w:
+                    bag_vector[i] += 1
+
+        file_object.write("{0} \n{1}\n".format(sentence, np.array(bag_vector)))
+    file_object.close()
 
 def main():
     data = pd.read_csv("train.csv")
+    generate_bow(data.tweet)
+    # data["tweet"] = word_extraction(data.tweet)
     vectorizer = CountVectorizer()
     labels = data["user"]
-    import collections, re
     bagsofwords = [ collections.Counter(re.findall(r'\w+', txt))
                 for txt in data.tweet]
 
-    label_bag = {i:Counter() for i in np.arange(9)}
+    label_bag = {i:Counter() for i in np.arange(10)}
 
     # all_words = set(bagsofwords)
-    # for i in range(labels.shape[0]):
-    #     c= label_bag[labels[i]]
-    #     label_bag[labels[i]]+=bagsofwords[i]
+    for i in range(labels.shape[0]):
+        c= label_bag[labels[i]]
+        label_bag[labels[i]]+=bagsofwords[i]
     sumbags = sum(bagsofwords, collections.Counter())
     print()
     # print()
@@ -36,4 +78,5 @@ def main():
 
 
 if __name__ == '__main__':
+
     main()
