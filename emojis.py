@@ -43,7 +43,7 @@ def get_top_counts(counts, n=5):
 		result[user] = Counter(dict(sorted(emojis.items(), key=lambda x: x[1], reverse=True)[:n]))
 	return result
 
-def remove_low_counts(counts, threshold=40):
+def remove_low_counts(counts, threshold=15):
 	'''
 	Returns a copy of a dictionary with only emojis that appeared more than a threshold times
 	'''

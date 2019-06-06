@@ -50,6 +50,13 @@ RTcommenWords=['whitehouse', 'dbongino', 'president', 'joebiden', 'vp', 'kkwbeau
 numricfichers=["word count","wordl len","numCap","numCap","numHashtags","numOfTaging ","mean word",
                "num of !" ,   "num of ?","num of dots","num of commas"]
 
+emojilist=["u'\u2728'", "u'\U0001f352'", "u'\U0001f49c'", "u'\u2640'", "u'\U0001f499'", "u'\U0001f351'"
+ "u'\U0001f5e3'","u'\U0001f440'", "u'\u203c'", "u'\u2642'", "u'\U0001f926'", "u'\U0001f937'",
+"u'\U0001f680'", "u'\u270a'", "u'\U0001f4af'", "u'\U0001f923'", "u'\U0001f601'", "u'\U0001f451'"
+"u'\U0001f62d'", "u'\U0001f389'", "u'\U0001f3b6'", "u'\U0001f60a'", "u'\U0001f31f'",
+"u'\U0001f3a4'", "u'\U0001f496'", "u'\U0001f607'""u'\U0001f44d'", "u'\U0001f44c'",
+"u'\U0001f51d'", "u'\U0001f609'", "u'\u26bd'"]
+
 
 
 def readData(path):
@@ -108,12 +115,18 @@ def pre_pro (sentence):
 
 
 def RTsplit(data):
+    """
+    splits to RT and notRT
+    """
     RT = data.loc[data["is RT"] == True]
     not_RT = data.drop(RT.index,axis = 0)
     return RT,not_RT
 
 
 def writeRawRT(path):
+    """
+    write only the RT and notRT
+    """
     data=pd.read_csv("train.csv")
     tweets=data["tweet"]
     data["is RT"]=tweets.apply(iscontains,word="is RT")
@@ -124,6 +137,7 @@ def writeRawRT(path):
     notRT.to_csv(r'rawNotRT.csv',index=False)
 
 def addcommenwords(tweets,data,flag):
+
     if flag==1:
         for comword in notRTcommenWords:
             newcol=tweets.apply(iscontains,word=comword)
@@ -132,11 +146,26 @@ def addcommenwords(tweets,data,flag):
         for comword in RTcommenWords:
             newcol=tweets.apply(iscontains,word=comword)
             data[comword]=newcol
+    # data=addemojis(data)
+    return data
+
+
+def addemojis(data):
+    emojilists=data["emojilists"]
+    for emoji in emojilist:
+        newcol=emojilists.apply(iscontains,word=emoji)
+        data[emoji]=newcol
     return data
 
 
 
 def  addnmricfichers(tweets,data):
+    """
+    add numric fichers about the tweet
+    :param tweets:
+    :param data:
+    :return: a data with numric fichers z-score
+    """
     data["word count"]=tweets.str.split().apply(len)
     data["wordl len"]=wordlens=tweets.str.len()
     data["numCap"]=tweets.str.findall(r'[A-Z]').str.len()
@@ -165,8 +194,8 @@ def runMe(path):
     RT ,notRT=RTsplit(data)
     RT=addcommenwords(tweets,RT,0)
     notRT=addcommenwords(tweets,notRT,1)
-    # RT.to_csv(r'trainRT.csv',index=False)
-    # notRT.to_csv(r'trainNotRT.csv',index=False)
+    RT.to_csv(r'trainRT.csv',index=False)
+    notRT.to_csv(r'trainNotRT.csv',index=False)
     return RT ,notRT
 
 
