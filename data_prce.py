@@ -80,8 +80,8 @@ def runMe(path):
     # RT,notRT=RTsplit(data)
     RT = data.loc[data["is RT"] == True]
     not_RT = data.drop(RT.index,axis = 0)
-    RT.to_csv(r'testRT.csv',index=False)
-    not_RT.to_csv(r'testNotRT.csv',index=False)
+    RT.to_csv(r'trainRT.csv',index=False)
+    not_RT.to_csv(r'trainNotRT.csv',index=False)
     return data
 
 
