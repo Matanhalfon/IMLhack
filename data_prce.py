@@ -171,7 +171,7 @@ def  addnmricfichers(tweets,data):
     data["numCap"]=tweets.str.findall(r'[A-Z]').str.len()
     data["numHashtags"]=tweets.str.findall(r'#').str.len()
     data["numOfTaging "]=tweets.str.findall(r'@').str.len()
-    data["emojilists"]=tweets.apply(extract_emojis)
+    # data["emojilists"]=tweets.apply(extract_emojis)
     data["mean word"]=tweets.apply(getMeanWord)
     data["num of !"]=tweets.str.findall(r'!').str.len()
     data["num of ?"]=tweets.str.findall(r'\?').str.len()
@@ -186,7 +186,7 @@ def  addnmricfichers(tweets,data):
 
 def runMe(path):
     # data=readData(path)
-    data=pd.read_csv("train.csv")
+    data=pd.read_csv(path)
     tweets=data["tweet"]
     data.tweet=tweets.apply(pre_pro)
     data=addnmricfichers(tweets,data)
@@ -194,9 +194,9 @@ def runMe(path):
     RT ,notRT=RTsplit(data)
     RT=addcommenwords(tweets,RT,0)
     notRT=addcommenwords(tweets,notRT,1)
-    RT.to_csv(r'trainRT.csv',index=False)
-    notRT.to_csv(r'trainNotRT.csv',index=False)
+    # RT.to_csv(r'testRT.csv',index=False)
+    # notRT.to_csv(r'testNotRT.csv',index=False)
     return RT ,notRT
 
 
-runMe(trainpath)
+runMe("test.csv")
