@@ -78,7 +78,7 @@ def clean_words_n(label_bag):
 
 
 def main():
-    data = pd.read_csv("train.csv")
+    data = pd.read_csv("rawNotRT.csv")
     data.tweet = data.tweet.apply(pre_pro)
     # generate_bow(data.tweet)
     # data["tweet"] = word_extraction(data.tweet)
@@ -94,6 +94,16 @@ def main():
         label_bag[labels[i]]+=bagsofwords[i]
     label_bag = clean_words(label_bag)
     label_bag = clean_words_n(label_bag)
+
+    for person in label_bag:
+        f_del = []
+        for word in label_bag[person]:
+            for pers in label_bag:
+                if pers != person and word in label_bag[pers]:
+                    f_del.append(word)
+        for w in f_del:
+            del label_bag[person][w]
+
 
     for per in label_bag:
 
