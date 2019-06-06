@@ -10,6 +10,11 @@ import regex
 path1="/cs/usr/matanhalfon/Desktop/MLhachton/data"
 trainpath="cs/usr/matanhalfon/PycharmProjects/IMLhack"
 
+
+pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+pattern2 = re.compile('@[A-Za-z0-9_-]+ ')
+pattern3 = re.compile('#[A-Za-z0-9_-]+ ')
+
 def readData(path):
     """
     read connect and shuffle the tweets and then write them to
@@ -57,6 +62,15 @@ def isRT(text):
 
 
 
+def pre_pro (sentence):
+    #  remove sites from tweets, @, #
+    sentence = sentence.lower()
+    r_site = pattern.sub('', sentence)
+    # r_strudel = pattern2.sub('', r_site)
+    # r_hesteck = pattern3.sub('', r_strudel)
+    # print (r_hesteck)
+    return r_site
+
 
 def RTsplit(data):
     RT = data.loc[data["is RT"] == True]
@@ -80,6 +94,7 @@ def runMe(path):
     # data=readData(path)
     data=pd.read_csv("train.csv")
     tweets=data["tweet"]
+    data.tweet=tweets.apply(pre_pro)
     data["word count"]=tweets.str.split().apply(len)
     data["wordl len"]=wordlens=tweets.str.len()
     data["numCap"]=tweets.str.findall(r'[A-Z]').str.len()
@@ -97,8 +112,8 @@ def runMe(path):
     # data.drop(["user"],axis=1,inplace=True)
     # RT,notRT=RTsplit(data)
     RT ,notRT=RTsplit(data)
-    RT.to_csv(r'trainRT.csv',index=False)
-    notRT.to_csv(r'trainNotRT.csv',index=False)
+    # RT.to_csv(r'trainRT.csv',index=False)
+    # notRT.to_csv(r'trainNotRT.csv',index=False)
     return data
 
 
