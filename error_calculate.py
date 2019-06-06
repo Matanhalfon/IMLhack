@@ -1,9 +1,10 @@
 import pandas as pd
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import np_utils
 from sklearn.preprocessing import LabelEncoder
-# from data_prce import runMe
+from data_prce import runMe
 RTS="RT @"
 
 
@@ -20,24 +21,22 @@ def return_x_y(path):
     encoder.fit(y)#
     y = encoder.transform(y)
     y = np_utils.to_categorical(y)
-    X = data.drop(["user","tweet","emojilists","is RT"],axis = 1)
+    X = data.drop(["user","tweet","emojilists","is RT", "num of ?", "num of dots", "num of commas", "numOfTaging ", "numHashtags", "numCap", "wordl len", "word count"],axis = 1)
     return X,y
 
 
-def is_RT(tweet,word="RT @"):
-    """
-    :return: true if the sample is retweet
-    """
-    return word in tweet
+# def is_RT(tweet,word="RT @"):
+#     """
+#     :return: true if the sample is retweet
+#     """
+#     return word in tweet
 
 
-def test_prediction(model_RT, model_not_RT , tweets):
+def test_prediction(model , tweets):
     predicted = []
     for x in tweets:
-        if is_RT(x):
-            predicted.append(model_RT.predict(x))
-        else:
-            predicted.append(model_not_RT.predict(x))
+        print (model.predict(x))
+        predicted.append(model.predict(x))
     return predicted
 
 
@@ -62,7 +61,7 @@ def create_neural_network(path):
 def create_logistic_regression(path):
     X,y = return_x_y(path)
     from sklearn.linear_model import LogisticRegression
-    clf = LogisticRegression(random_state=0, solver='lbfgs',multi_class='multinomial').fit(X, y)
+    clf = LogisticRegression(random_state=0,multi_class='multinomial').fit(X, y)
     return clf
 def train():
     model_not_RT = create_neural_network("trainNotRT.csv")
@@ -71,13 +70,21 @@ def train():
 
 
 def main(test_path):
-    model_RT,model_not_RT = train()
     data = pd.read_csv(test_path)
-    # Rt , NotRT = runMe(test_path)
-    test_X = data["tweet"]
-    prediction = test_prediction(model_RT,model_not_RT,test_X)
     test_y = data["user"]
-    print(calculate_error(prediction,test_y))
+    Rt , notRT = runMe(test_path)
+
+    indexes =list(Rt.index)+list(notRT.index)
+    model_RT,model_not_RT = train()
+
+    # prediction_RT = test_prediction(model_RT,Rt)
+    # prediction_not_RT = test_prediction(model_not_RT,notRT)
+    # predictions = np.array(prediction_RT+prediction_not_RT)
+    # final_predictions = predictions[indexes]
+    #
+    #
+    # # test_y = data["user"]
+    # print(calculate_error(final_predictions,test_y) )
 
 
 if __name__ == '__main__':

@@ -132,3 +132,17 @@ if __name__ == '__main__':
 # def update_dict(bag,sentence, label):
 #     for word in sentence:
 #         bag[label][word] +=1
+
+
+class ErrorCalculator:
+    def __init__(self, classifier):
+        self.classifier = classifier
+    def fit(self,X,Y):
+        self.classifier.fit(X, Y)
+    def calculate_error(self, X, y):
+        error = 0
+        predictions = self.classifier.predict(X)
+        for i in range(len(predictions)):
+            if predictions[i] != y[i]:
+                error+=1
+        return error/len(predictions)

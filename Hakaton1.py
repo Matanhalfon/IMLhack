@@ -17,9 +17,9 @@ def pre_pro (sentence):
     #  remove sites from tweets, @, #
     sentence = sentence.lower()
     r_site = pattern.sub('', sentence)
-    r_strudel = pattern2.sub('', r_site)
-    r_hesteck = pattern3.sub('', r_strudel)
-    r = pattern4.sub('', r_hesteck)
+    # r_strudel = pattern2.sub('', r_site)
+    # r_hesteck = pattern3.sub('', r_strudel)
+    r = pattern4.sub('', r_site)
     # print (r_hesteck)
     return r
 
@@ -49,6 +49,16 @@ def generate_bow(sentence):
                 bag_vector[i] += 1
     return bag_vector
 
+def generate_bow1(word):
+
+    bag_vector = np.zeros(len(data.tweet))
+    for sentence in data.tweet:
+        words = word_extraction(sentence)
+        for i, w in enumerate(words):
+            if word == w:
+                bag_vector[i] += 1
+    return bag_vector
+
 
 
 data = pd.read_csv("rawNotRT.csv")
@@ -58,7 +68,12 @@ print (len(vocab))
 file_object = open("words_file", 'w')
 file_object.write("Word List for Document \n{0} \n".format(vocab))
 file_object.close()
-X = data.tweet.apply(generate_bow)
+for word in vocab:
+    bag_vector = generate_bow1(word)
+    data[word] = bag_vector
+
+print (data)
+# X = data.tweet.apply(generate_bow)
 Y = data["user"]
 
 

@@ -70,7 +70,7 @@ def clean_words_n(label_bag):
     for person in label_bag:
         f_del = []
         for word in label_bag[person]:
-            if int(label_bag[person][word])< 8:  # appear in others
+            if int(label_bag[person][word])< 3:  # appear in others
                 f_del.append(word)
         for w in f_del:
             del label_bag[person][w]
@@ -82,7 +82,7 @@ def clean_words_s(label_bag):
     for person in label_bag:
         f_del = []
         for word in label_bag[person]:
-            if int(label_bag[person][word])< 20:  # appear in me
+            if int(label_bag[person][word])< 30:  # appear in me
                 f_del.append(word)
         for w in f_del:
             del label_bag[person][w]
@@ -90,7 +90,7 @@ def clean_words_s(label_bag):
 
 
 def main():
-    data = pd.read_csv("rawRT.csv")
+    data = pd.read_csv("rawNotRT.csv")
     data.tweet = data.tweet.apply(pre_pro)
     # generate_bow(data.tweet)
     # data["tweet"] = word_extraction(data.tweet)
@@ -114,21 +114,30 @@ def main():
                 if pers != person and word in label_bag[pers]:
                     f_del.append(word)
         for w in f_del:
-            del label_bag[person][w]
+            for person in label_bag:
+                if word in label_bag[person]:
+                    del label_bag[person][w]
 
     label_bag = clean_words_s(label_bag)
 
-    for per in label_bag:
+    arr = []
+    for person in label_bag:
+        for word in label_bag[person]:
+            arr.append(word)
+    print (arr)
+    print(len(arr))
 
-        d = label_bag[per]
-        X = np.arange(len(d))
-        pl.bar(X, d.values(), align='center', width=0.5)
-        pl.xticks(X, d.keys())
-        # ymax = max(d.values()) + 1
-        # pl.ylim(0, ymax)
-        pl.xticks(rotation='vertical')
-        pl.title(per)
-        pl.show()
+    # for per in label_bag:
+    #
+    #     d = label_bag[per]
+    #     X = np.arange(len(d))
+    #     pl.bar(X, d.values(), align='center', width=0.5)
+    #     pl.xticks(X, d.keys())
+    #     # ymax = max(d.values()) + 1
+    #     # pl.ylim(0, ymax)
+    #     pl.xticks(rotation='vertical')
+    #     pl.title(per)
+    #     pl.show()
 
 
 
