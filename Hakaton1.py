@@ -10,16 +10,18 @@ import numpy as np
 pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 pattern2 = re.compile('@[A-Za-z0-9_-]+ ')
 pattern3 = re.compile('#[A-Za-z0-9_-]+ ')
+pattern4 = re.compile('[0-9]+')
 
 
 def pre_pro (sentence):
     #  remove sites from tweets, @, #
     sentence = sentence.lower()
     r_site = pattern.sub('', sentence)
-    # r_strudel = pattern2.sub('', r_site)
-    # r_hesteck = pattern3.sub('', r_strudel)
+    r_strudel = pattern2.sub('', r_site)
+    r_hesteck = pattern3.sub('', r_strudel)
+    r = pattern4.sub('', r_hesteck)
     # print (r_hesteck)
-    return r_site
+    return r
 
 
 def word_extraction(sentence):
@@ -52,6 +54,7 @@ def generate_bow(sentence):
 data = pd.read_csv("rawNotRT.csv")
 data.tweet = data.tweet.apply(pre_pro)
 vocab = tokenize(data.tweet)
+print (len(vocab))
 file_object = open("words_file", 'w')
 file_object.write("Word List for Document \n{0} \n".format(vocab))
 file_object.close()
