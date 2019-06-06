@@ -8,21 +8,28 @@ import collections, re
 import json
 import re
 pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+pattern2 = re.compile('@*')
 
 
 
-def pre_pro (allsentences):
-    for idx,sentence in enumerate(allsentences):
-        allsentences[idx] = pattern.sub('', sentence)
-    return allsentences
+def pre_pro (sentence):
+    #  remove sites from tweets.
+
+    c = sentence
+    after = pattern.sub('', sentence)
+    return pattern.sub('', sentence)
 
 
-        
+def remove_strudel (sentence):
+    c2 = sentence
+    after2 = pattern2.sub('', sentence)
+    return  pattern2.sub('', sentence)
+
+def
 
 def word_extraction(sentence):
     with open("english") as stop_words:
         ignore = list(stop_words)
-
     words = re.sub("[^\w]", " ", sentence).split()
     cleaned_text = [w.lower() for w in words if w not in ignore]
     return cleaned_text
@@ -54,7 +61,8 @@ def generate_bow(allsentences):
 
 def main():
     data = pd.read_csv("train.csv")
-    generate_bow(data.tweet)
+    # data.tweet = data.tweet.apply(pre_pro)
+    # generate_bow(data.tweet)
     # data["tweet"] = word_extraction(data.tweet)
     vectorizer = CountVectorizer()
     labels = data["user"]
@@ -65,7 +73,6 @@ def main():
 
     # all_words = set(bagsofwords)
     for i in range(labels.shape[0]):
-        c= label_bag[labels[i]]
         label_bag[labels[i]]+=bagsofwords[i]
     sumbags = sum(bagsofwords, collections.Counter())
     print()
