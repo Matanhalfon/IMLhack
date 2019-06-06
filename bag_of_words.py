@@ -8,6 +8,22 @@ Input : "John likes to watch movies. Mary likes movies too"
 Ouput : "John","likes","to","watch","movies","Mary","likes","movies","too"
 '''
 
+
+pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+pattern2 = re.compile('@[A-Za-z0-9_-]+ ')
+pattern3 = re.compile('#[A-Za-z0-9_-]+ ')
+
+
+def pre_pro (sentence):
+    #  remove sites from tweets, @, #
+    sentence = sentence.lower()
+    r_site = pattern.sub('', sentence)
+    # r_strudel = pattern2.sub('', r_site)
+    # r_hesteck = pattern3.sub('', r_strudel)
+    # print (r_hesteck)
+    return r_site
+
+
 def tokenize(sentences):
     words = []
     for sentence in sentences:
@@ -40,9 +56,11 @@ def generate_bow(allsentences):
         print("{0} \n{1}\n".format(sentence, numpy.array(bag_vector)))
 
 
-allsentences = ["Joe waited for the train", "The train was late", "Mary and Samantha took the bus",
+allsentences = ["Joe waited`s for the train", "The train was late", "Mary and Samantha took the bus",
                 "I looked for Mary and Samantha at the bus station",
                 "Mary and Samantha arrived at the bus station early but waited until noon for the bus"]
+
+
 
 generate_bow(allsentences)
 
@@ -57,3 +75,4 @@ clf = OutputCodeClassifier(LinearSVC(random_state=0),code_size=2, random_state=0
 clf.fit(X, y)
 m = clf.predict(X)
 print (m)
+
