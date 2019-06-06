@@ -6,9 +6,17 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import collections, re
 import json
+import re
+pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+
+
 
 def pre_pro (allsentences):
-    for sentence in allsentences:
+    for idx,sentence in enumerate(allsentences):
+        allsentences[idx] = pattern.sub('', sentence)
+    return allsentences
+
+
         
 
 def word_extraction(sentence):
