@@ -43,7 +43,7 @@ def get_top_counts(counts, n=5):
 		result[user] = Counter(dict(sorted(emojis.items(), key=lambda x: x[1], reverse=True)[:n]))
 	return result
 
-def remove_low_counts(counts, threshold=40):
+def remove_low_counts(counts, threshold=15):
 	'''
 	Returns a copy of a dictionary with only emojis that appeared more than a threshold times
 	'''
@@ -52,19 +52,30 @@ def remove_low_counts(counts, threshold=40):
 		result[user] = Counter(dict([entry for entry in emojis.items() if entry[1] >= threshold]))		
 	return result
 			
-def remove_common_counts(counts):
+def remove_common_counts(counts, n=1):
 	'''
-	Returns a copy of a dictionary with only emojis that are unique to each user
+	Returns a copy of a dictionary with only emojis that are unique 
+	(i.e. they appear at most in n other users) to each user
 	'''
-	# fidning what emojis to remove for each user
-	to_remove = dict()
+	# finding for each user in how many other users an emoji appears
+	other_users_counts = dict()
 	for user_i in counts.keys():
 		for user_j, emojis in counts.items():
 			if user_i != user_j:
-				try:
-					to_remove[user_i].update(emojis.keys())
-				except KeyError:
-					to_remove[user_i] = set(emojis.keys())
+				# try:
+					# to_remove[user_i].update(emojis.keys())
+				# except KeyError:
+					# to_remove[user_i] = set(emojis.keys())
+				for emoji in emojis.keys():
+					try:
+						other_users_counts[user_i][emoji] += 1
+					except KeyError:
+						other_users_counts[user_i] = dict({emoji: 1})
+
+	# creating a map for each user what emojis to remove	
+	to_remove = Counter(dict())
+	for user, emojis in other_users_counts.items():
+		to_remove[user] = [entry[0] for entry in emojis.items() if entry[1] > n] 
 	
 	# creating a dict with only unique emojis
 	result = Counter()
@@ -95,7 +106,10 @@ def print_counts(coutns):
 		print('User #{}: {}'.format(user, emojis))
 
 if __name__ == '__main__':
-	counts = remove_common_counts(remove_low_counts(get_counts(get_emojis())))
+	counts = get_counts(get_emojis())
+	counts = remove_low_counts(counts)
+	counts = remove_common_counts(counts)	
+
 	# print_counts(counts)	
-	# plot_counts(counts)
-	write_counts(counts)
+	plot_counts(counts)
+	# write_counts(counts)
