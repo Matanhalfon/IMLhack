@@ -58,6 +58,23 @@ def isRT(text):
 
 
 
+def RTsplit(data):
+    RT = data.loc[data["is RT"] == True]
+    not_RT = data.drop(RT.index,axis = 0)
+    return RT,not_RT
+
+
+def writeRawRT(path):
+    data=pd.read_csv("train.csv")
+    tweets=data["tweet"]
+    data["is RT"]=tweets.apply(isRT)
+    RT,notRT=RTsplit(data)
+    RT = RT.drop(["is RT"],axis = 1)
+    notRT = notRT.drop(["is RT"], axis =1)
+    RT.to_csv(r'rawRT.csv',index=False)
+    notRT.to_csv(r'rawNotRT.csv',index=False)
+
+
 
 def runMe(path):
     # data=readData(path)
@@ -76,12 +93,12 @@ def runMe(path):
     data["num of commas"]=tweets.str.findall(r'\,').str.len()
     data["is RT"]=tweets.apply(isRT)
     labels=data["user"]
-    data.drop(["user"],axis=1,inplace=True)
+
+    # data.drop(["user"],axis=1,inplace=True)
     # RT,notRT=RTsplit(data)
-    RT = data.loc[data["is RT"] == True]
-    not_RT = data.drop(RT.index,axis = 0)
+    RT ,notRT=RTsplit(data)
     RT.to_csv(r'trainRT.csv',index=False)
-    not_RT.to_csv(r'trainNotRT.csv',index=False)
+    notRT.to_csv(r'trainNotRT.csv',index=False)
     return data
 
 
