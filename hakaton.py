@@ -70,7 +70,7 @@ def clean_words_n(label_bag):
     for person in label_bag:
         f_del = []
         for word in label_bag[person]:
-            if int(label_bag[person][word])< 2:  # appear in others
+            if int(label_bag[person][word])< 8:  # appear in others
                 f_del.append(word)
         for w in f_del:
             del label_bag[person][w]
@@ -82,7 +82,7 @@ def clean_words_s(label_bag):
     for person in label_bag:
         f_del = []
         for word in label_bag[person]:
-            if int(label_bag[person][word])< 30:  # appear in me
+            if int(label_bag[person][word])< 20:  # appear in me
                 f_del.append(word)
         for w in f_del:
             del label_bag[person][w]
@@ -90,7 +90,7 @@ def clean_words_s(label_bag):
 
 
 def main():
-    data = pd.read_csv("rawNotRT.csv")
+    data = pd.read_csv("rawRT.csv")
     data.tweet = data.tweet.apply(pre_pro)
     # generate_bow(data.tweet)
     # data["tweet"] = word_extraction(data.tweet)
