@@ -127,17 +127,17 @@ def main():
     print (arr)
     print(len(arr))
 
-    # for per in label_bag:
-    #
-    #     d = label_bag[per]
-    #     X = np.arange(len(d))
-    #     pl.bar(X, d.values(), align='center', width=0.5)
-    #     pl.xticks(X, d.keys())
-    #     # ymax = max(d.values()) + 1
-    #     # pl.ylim(0, ymax)
-    #     pl.xticks(rotation='vertical')
-    #     pl.title(per)
-    #     pl.show()
+    for per in label_bag:
+
+        d = label_bag[per]
+        X = np.arange(len(d))
+        pl.bar(X, d.values(), align='center', width=0.5)
+        pl.xticks(X, d.keys())
+        # ymax = max(d.values()) + 1
+        # pl.ylim(0, ymax)
+        pl.xticks(rotation='vertical')
+        pl.title(per)
+        pl.show()
 
 
 
