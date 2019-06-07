@@ -86,11 +86,11 @@ def remove_common_counts(counts, n=1):
 			
 def plot_counts(counts):
 	for user, emojis in counts.items():
-		# decoded = [unicode(emoji, 'unicode-escape') for emoji in emojis.keys()]
-		decoded = emojis.keys()
+		decoded = [emoji[2:-1].encode('utf-8').decode('unicode-escape') for emoji in emojis.keys()]
+		# decoded = emojis.keys()
 		plt.bar(decoded, emojis.values())
 		plt.title('User #{}'.format(user))
-		plt.xticks(rotation='vertical')
+		# plt.xticks(rotation='vertical')
 		plt.show()
 
 def write_counts(counts):

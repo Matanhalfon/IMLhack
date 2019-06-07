@@ -20,4 +20,4 @@ if __name__ == '__main__':
 
 	clf = LogisticRegression(solver='saga', multi_class='multinomial').fit(f, y)
 	clf.predict(t)
-	print(clf.score(t, y))	
+	print(clf.score(t, test_data['user']))
